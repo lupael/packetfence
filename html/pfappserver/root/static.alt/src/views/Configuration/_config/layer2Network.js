@@ -119,6 +119,16 @@ export const view = (form = {}, meta = {}) => {
           ]
         },
         {
+          label: i18n.t('Description'),
+          cols: [
+            {
+              namespace: 'description',
+              component: pfFormInput,
+              attrs: attributesFromMeta(meta, 'description')
+            }
+          ]
+        },
+        {
           label: i18n.t('Algorithm'),
           cols: [
             {
