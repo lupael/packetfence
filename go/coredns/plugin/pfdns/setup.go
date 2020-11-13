@@ -6,17 +6,19 @@ import (
 	"sync"
 	"time"
 
+	"github.com/coredns/caddy"
 	"github.com/inverse-inc/packetfence/go/coredns/core/dnsserver"
 	"github.com/inverse-inc/packetfence/go/coredns/plugin"
 	"github.com/inverse-inc/packetfence/go/pfconfigdriver"
 	"github.com/inverse-inc/packetfence/go/timedlock"
 	"github.com/inverse-inc/packetfence/go/unifiedapiclient"
-	"github.com/mholt/caddy"
 	cache "github.com/patrickmn/go-cache"
 )
 
 func init() {
 	GlobalTransactionLock = timedlock.NewRWLock()
+	GlobalTransactionLock.Panic = false
+	GlobalTransactionLock.PrintErrors = true
 	caddy.RegisterPlugin("pfdns", caddy.Plugin{
 		ServerType: "dns",
 		Action:     setuppfdns,
@@ -52,29 +54,29 @@ func setuppfdns(c *caddy.Controller) error {
 		}
 	}
 
-	if err := pf.DbInit(); err != nil {
+	if err := pf.DbInit(ctx); err != nil {
 		return c.Errf("pfdns: unable to initialize database connection")
 	}
-	if err := pf.PassthroughsInit(); err != nil {
+	if err := pf.PassthroughsInit(ctx); err != nil {
 		return c.Errf("pfdns: unable to initialize passthrough")
 	}
-	if err := pf.PassthroughsIsolationInit(); err != nil {
+	if err := pf.PassthroughsIsolationInit(ctx); err != nil {
 		return c.Errf("pfdns: unable to initialize isolation passthrough")
 	}
 
-	if err := pf.WebservicesInit(); err != nil {
+	if err := pf.WebservicesInit(ctx); err != nil {
 		return c.Errf("pfdns: unable to fetch Webservices credentials")
 	}
 
-	if err := pf.detectVIP(); err != nil {
+	if err := pf.detectVIP(ctx); err != nil {
 		return c.Errf("pfdns: unable to initialize the vip network map")
 	}
 
-	if err := pf.DomainPassthroughInit(); err != nil {
+	if err := pf.DomainPassthroughInit(ctx); err != nil {
 		return c.Errf("pfdns: unable to initialize domain passthrough")
 	}
 
-	if err := pf.detectType(); err != nil {
+	if err := pf.detectType(ctx); err != nil {
 		return c.Errf("pfdns: unable to initialize Network Type")
 	}
 

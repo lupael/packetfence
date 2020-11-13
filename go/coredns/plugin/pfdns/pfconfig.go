@@ -2,6 +2,7 @@ package pfdns
 
 import (
 	"context"
+	"errors"
 	"net"
 	"regexp"
 
@@ -19,19 +20,18 @@ func (pf *pfdns) Refresh(ctx context.Context) {
 	// If some of the passthroughs were changed, we should reload
 	if !pfconfigdriver.IsValid(ctx, &pfconfigdriver.Config.Passthroughs.Registration) || !pfconfigdriver.IsValid(ctx, &pfconfigdriver.Config.Passthroughs.Isolation) {
 		log.LoggerWContext(ctx).Info("Reloading passthroughs and flushing cache")
-		pf.PassthroughsInit()
-		pf.PassthroughsIsolationInit()
+		pf.PassthroughsInit(ctx)
+		pf.PassthroughsIsolationInit(ctx)
 
 		pf.DNSFilter.Flush()
 		pf.IpsetCache.Flush()
 	}
 	if !pfconfigdriver.IsValid(ctx, &pfconfigdriver.Config.Dns.Configuration) {
-		pf.DNSRecord()
+		pf.DNSRecord(ctx)
 	}
 }
 
-func (pf *pfdns) PassthroughsInit() error {
-	var ctx = context.Background()
+func (pf *pfdns) PassthroughsInit(ctx context.Context) error {
 
 	pfconfigdriver.FetchDecodeSocket(ctx, &pfconfigdriver.Config.Passthroughs.Registration)
 
@@ -50,8 +50,7 @@ func (pf *pfdns) PassthroughsInit() error {
 	return nil
 }
 
-func (pf *pfdns) PassthroughsIsolationInit() error {
-	var ctx = context.Background()
+func (pf *pfdns) PassthroughsIsolationInit(ctx context.Context) error {
 
 	pfconfigdriver.FetchDecodeSocket(ctx, &pfconfigdriver.Config.Passthroughs.Isolation)
 
@@ -69,8 +68,7 @@ func (pf *pfdns) PassthroughsIsolationInit() error {
 	return nil
 }
 
-func (pf *pfdns) DNSRecord() error {
-	var ctx = context.Background()
+func (pf *pfdns) DNSRecord(ctx context.Context) error {
 
 	pfconfigdriver.FetchDecodeSocket(ctx, &pfconfigdriver.Config.Dns.Configuration)
 	if pfconfigdriver.Config.Dns.Configuration.RecordDNS == "enabled" {
@@ -82,8 +80,8 @@ func (pf *pfdns) DNSRecord() error {
 }
 
 // DetectVIP
-func (pf *pfdns) detectVIP() error {
-	var ctx = context.Background()
+func (pf *pfdns) detectVIP(ctx context.Context) error {
+
 	var NetIndex net.IPNet
 
 	pfconfigdriver.FetchDecodeSocket(ctx, &pfconfigdriver.Config.Interfaces.ListenInts)
@@ -92,8 +90,11 @@ func (pf *pfdns) detectVIP() error {
 	var keyConfNet pfconfigdriver.PfconfigKeys
 	keyConfNet.PfconfigNS = "config::Network"
 	keyConfNet.PfconfigHostnameOverlay = "yes"
-	pfconfigdriver.FetchDecodeSocket(ctx, &keyConfNet)
-
+	err := pfconfigdriver.FetchDecodeSocket(ctx, &keyConfNet)
+	if err != nil {
+		log.LoggerWContext(ctx).Error(err.Error())
+		return errors.New("Unable to fetch config::Network from pfconfig")
+	}
 	var keyConfCluster pfconfigdriver.NetInterface
 	keyConfCluster.PfconfigNS = "config::Pf(CLUSTER," + pfconfigdriver.FindClusterName(ctx) + ")"
 
@@ -106,17 +107,33 @@ func (pf *pfdns) detectVIP() error {
 			}
 		}
 	}
-	id, _ := GlobalTransactionLock.Lock()
+	id, err := GlobalTransactionLock.Lock()
+	if err != nil {
+		return errors.New("Unable to create a RWLock")
+	}
 	defer GlobalTransactionLock.Unlock(id)
 	for _, v := range sharedutils.RemoveDuplicates(append(pfconfigdriver.Config.Interfaces.ListenInts.Element, intDNS...)) {
 
 		keyConfCluster.PfconfigHashNS = "interface " + v
-		pfconfigdriver.FetchDecodeSocket(ctx, &keyConfCluster)
+		err = pfconfigdriver.FetchDecodeSocket(ctx, &keyConfCluster)
+		if err != nil {
+			log.LoggerWContext(ctx).Error(err.Error())
+			continue
+		}
+
 		// Nothing in keyConfCluster.Ip so we are not in cluster mode
 		var VIP net.IP
 
-		eth, _ := net.InterfaceByName(v)
-		adresses, _ := eth.Addrs()
+		eth, err := net.InterfaceByName(v)
+		if err != nil {
+			err = errors.New("Unable to get network interface " + v + " by name")
+			continue
+		}
+		adresses, err := eth.Addrs()
+		if err != nil {
+			err = errors.New("Unable to get the ip addresses of the interface " + v)
+			continue
+		}
 		for _, adresse := range adresses {
 			var NetIP *net.IPNet
 			var IP net.IP
@@ -133,7 +150,11 @@ func (pf *pfdns) detectVIP() error {
 			for _, key := range keyConfNet.Keys {
 				var ConfNet pfconfigdriver.NetworkConf
 				ConfNet.PfconfigHashNS = key
-				pfconfigdriver.FetchDecodeSocket(ctx, &ConfNet)
+				err = pfconfigdriver.FetchDecodeSocket(ctx, &ConfNet)
+				if err != nil {
+					log.LoggerWContext(ctx).Error(err.Error())
+					continue
+				}
 				if (NetIP.Contains(net.ParseIP(ConfNet.DhcpStart)) && NetIP.Contains(net.ParseIP(ConfNet.DhcpEnd))) || NetIP.Contains(net.ParseIP(ConfNet.NextHop)) {
 					NetIndex.Mask = net.IPMask(net.ParseIP(ConfNet.Netmask))
 					NetIndex.IP = net.ParseIP(key)
