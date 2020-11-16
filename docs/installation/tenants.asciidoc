@@ -41,6 +41,12 @@ WARNING: `domain_name` and `portal_domain_name` are not mandatory when creating 
 
 A network device is attached to one tenant at creation.
 
+When PacketFence receives a RADIUS request from a network device, it will instantiate a network device in this tenant and create node in this tenant.
+
 ==== Creating a user
 
 Each user created in a specific tenant with a `domain_name` will follow this naming convention in DB: `username@DOMAIN_NAME_OF_TENANT` 
+
+==== Captive portal
+
+In order to display different captive portal for each tenant, you can filter on tenant ID in connection profiles.
