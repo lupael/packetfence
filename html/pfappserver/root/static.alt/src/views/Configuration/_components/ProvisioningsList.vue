@@ -28,6 +28,7 @@
           <b-dropdown-item :to="{ name: 'newProvisioning', params: { provisioningType: 'sepm' } }">Symantec Endpoint Protection Manager (SEPM)</b-dropdown-item>
           <b-dropdown-item :to="{ name: 'newProvisioning', params: { provisioningType: 'symantec' } }">Symantec App Center</b-dropdown-item>
           <b-dropdown-item :to="{ name: 'newProvisioning', params: { provisioningType: 'windows' } }">Windows</b-dropdown-item>
+          <b-dropdown-item :to="{ name: 'newProvisioning', params: { provisioningType: 'packetfence_ztn' } }">PacketFence Zero Trust Network</b-dropdown-item>
           <b-dropdown-item :to="{ name: 'newProvisioning', params: { provisioningType: 'intune' } }">Microsoft Intune</b-dropdown-item>
           <b-dropdown-item :to="{ name: 'newProvisioning', params: { provisioningType: 'servicenow' } }">ServiceNow</b-dropdown-item>
         </b-dropdown>
