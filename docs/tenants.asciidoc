@@ -1,0 +1,46 @@
+PacketFence supports multi-tenants and is by default in a mono-tenant mode.
+
+=== Behavior
+
+Tenant `1` is the default tenant. A default PacketFence installation will use this tenant.
+
+Tenant `0` is the global tenant with rigths to modify configuration when multi-tenant mode is enabled.
+
+All items configuration are global and share between all tenants. If you want
+to manage a multi-tenant setup, you need to deploy a specific configuration that will assign tenant ID.
+
+=== Getting started
+
+==== Prerequisites
+
+You should have a:
+- a domain name for your tenant
+
+Each user will have to login using its username@DOMAIN_NAME_OF_TENANT
+
+==== Creating your tenant
+
+Following command will create a new tenant, mapped to `example.com` domain and
+with a specific captive portal address `portal.example.com`:
+
+[source,bash]
+----
+/usr/local/pf/bin/pfcmd tenant add example example.com portal.example.com
+systemctl restart packetfence-config
+/usr/local/pf/bin/pfcmd service pf restart
+----
+
+After that, if you try to connect on web admin using default `admin` account, you will not be able to access any configuration items.
+
+Now you need to do configuration actions using `system` account which has a specific password defined in [filename]`/usr/local/pf/conf/unified_api_system_pass`.
+Or create a specific account in global tenant to manage configuration.
+
+WARNING: `domain_name` and `portal_domain_name` are not mandatory when creating a tenant.
+
+==== Creating a network device
+
+A network device is attached to one tenant at creation.
+
+==== Creating a user
+
+Each user created in a specific tenant with a `domain_name` will follow this naming convention in DB: `username@DOMAIN_NAME_OF_TENANT` 
