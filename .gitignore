@@ -17,6 +17,7 @@ conf/admin.conf
 conf/httpd.conf
 conf/named.conf
 conf/cluster-files.txt
+conf/event_loggers.conf
 conf/pf.conf
 conf/*.lock
 conf/*.lockonce
