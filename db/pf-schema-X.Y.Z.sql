@@ -1299,10 +1299,50 @@ CREATE TABLE auth_log (
   KEY  attempted_at (attempted_at)
 ) ENGINE=InnoDB;
 
+DELIMITER //
+CREATE TRIGGER `log_event_auth_log_insert` AFTER INSERT ON `auth_log`
+FOR EACH ROW BEGIN
+set @k = pf_logger(
+        "auth_log",
+        "tenant_id", NEW.tenant_id,
+        "process_name", NEW.process_name,
+        "mac", NEW.mac,
+        "pid", NEW.pid,
+        "status", NEW.status,
+        "attempted_at", NEW.attempted_at,
+        "completed_at", NEW.completed_at,
+        "source", NEW.source,
+        "profile", NEW.profile
+    );
+END;
+//
+
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER `log_event_auth_log_update` AFTER UPDATE ON `auth_log`
+FOR EACH ROW BEGIN
+set @k = pf_logger(
+        "auth_log",
+        "tenant_id", NEW.tenant_id,
+        "process_name", NEW.process_name,
+        "mac", NEW.mac,
+        "pid", NEW.pid,
+        "status", NEW.status,
+        "attempted_at", NEW.attempted_at,
+        "completed_at", NEW.completed_at,
+        "source", NEW.source,
+        "profile", NEW.profile
+    );
+END;
+//
+
+DELIMITER ;
+
 --
 -- Creating chi_cache table
 --
-
+DELIMITER ;
 CREATE TABLE `chi_cache` (
   `key` VARCHAR(767),
   `value` LONGBLOB,
@@ -1397,8 +1437,8 @@ CREATE TABLE `admin_api_audit_log` (
    KEY `created_at` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=COMPRESSED;
 
-DELIMITER $$
-CREATE TRIGGER `log_event_admin_api_audit_log` AFTER INSERT ON `admin_api_audit_log`
+DELIMITER //
+CREATE TRIGGER `log_event_admin_api_audit_log_insert` AFTER INSERT ON `admin_api_audit_log`
 FOR EACH ROW BEGIN
 set @k = pf_logger(
         "admin_api_audit_log",
@@ -1413,7 +1453,9 @@ set @k = pf_logger(
         "status", NEW.status
     );
 END;
-$$
+//
+
+DELIMITER ;
 
 --
 -- Table structure for table `dhcppool`
@@ -1618,16 +1660,6 @@ CREATE TABLE bandwidth_accounting_history (
     KEY bandwidth_aggregate_buckets (time_bucket, node_id, in_bytes, out_bytes),
     KEY bandwidth_accounting_tenant_id_mac (tenant_id, mac)
 );
-
---
--- Table structure for table `event_log`
---
-
-CREATE TABLE event_log (
-    namespace VARCHAR(255),
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    event_info BLOB
-) ENGINE=InnoDB;
 
 CREATE OR REPLACE FUNCTION ROUND_TO_HOUR (d DATETIME)
     RETURNS DATETIME DETERMINISTIC
