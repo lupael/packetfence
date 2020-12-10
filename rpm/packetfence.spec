@@ -7,6 +7,7 @@
 %global     logfiles packetfence.log snmptrapd.log pfdetect pfcron security_event.log httpd.admin.audit.log
 %global     logdir /usr/local/pf/logs
 %global     debug_package %{nil}
+%global     mariadb_plugin_dir %(pkg-config mariadb --variable=plugindir)
 
 
 #==============================================================================
@@ -381,7 +382,7 @@ done
 %install
 %{__rm} -rf %{buildroot}
 # mysql plugin
-%{__install} -D -m0555 src/mariadb_udf/pf_udf.so %{buildroot}/$(pkg-config mariadb --variable=plugindir)/pf_udf.so
+%{__install} -D -m0555 src/mariadb_udf/pf_udf.so %{buildroot}/%{mariadb_plugin_dir}/pf_udf.so
 
 # systemd targets
 %{__install} -D -m0644 conf/systemd/packetfence.target %{buildroot}/etc/systemd/system/packetfence.target
@@ -1314,6 +1315,7 @@ fi
 %dir                    /usr/local/pf/var/redis_ntlm_cache
 %dir                    /usr/local/pf/var/ssl_mutex
 %config(noreplace)      /usr/local/pf/var/cache_control
+                        %{mariadb_plugin_dir}/pf_udf.so
 
 #==============================================================================
 # Changelog
