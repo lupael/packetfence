@@ -685,6 +685,19 @@ export const viewFields = {
       ]
     }
   },
+  dead_duration: (form, meta = {}) => {
+    return {
+      label: i18n.t('Dead duration'),
+      text: i18n.t('How much time in seconds should a server be marked dead before it is retried. When specifying multiple LDAP servers or a DNS name pointing to multiple IPs, then this option can be used to offer more consistent failover. A value of 0 disables this feature.'),
+      cols: [
+        {
+          namespace: 'dead_duration',
+          component: pfFormInput,
+          attrs: attributesFromMeta(meta, 'dead_duration')
+        }
+      ]
+    }
+  },
   description: (form, meta = {}) => {
     return {
       label: i18n.t('Description'),
@@ -1871,6 +1884,7 @@ export const view = (form = {}, meta = {}) => {
             viewFields.id(form, meta),
             viewFields.description(form, meta),
             viewFields.host_port_encryption(form, meta),
+            viewFields.dead_duration(form, meta),
             viewFields.connection_timeout(form, meta),
             viewFields.write_timeout(form, meta),
             viewFields.read_timeout(form, meta),
@@ -1970,6 +1984,7 @@ export const view = (form = {}, meta = {}) => {
             viewFields.id(form, meta),
             viewFields.description(form, meta),
             viewFields.host_port_encryption(form, meta),
+            viewFields.dead_duration(form, meta),
             viewFields.connection_timeout(form, meta),
             viewFields.write_timeout(form, meta),
             viewFields.read_timeout(form, meta),
@@ -1998,6 +2013,7 @@ export const view = (form = {}, meta = {}) => {
             viewFields.id(form, meta),
             viewFields.description(form, meta),
             viewFields.host_port_encryption(form, meta),
+            viewFields.dead_duration(form, meta),
             viewFields.connection_timeout(form, meta),
             viewFields.write_timeout(form, meta),
             viewFields.read_timeout(form, meta),
@@ -2785,6 +2801,9 @@ export const validatorFields = {
   currency: (form, meta = {}) => {
     return { currency: validatorsFromMeta(meta, 'currency', i18n.t('Currency')) }
   },
+  dead_duration: (form, meta = {}) => {
+    return { dead_duration: validatorsFromMeta(meta, 'dead_duration', i18n.t('Dead duration')) }
+  },
   description: (form, meta = {}) => {
     return { description: validatorsFromMeta(meta, 'description', i18n.t('Description')) }
   },
@@ -3055,6 +3074,7 @@ export const validators = (form = {}, meta = {}) => {
         ...validatorFields.id(form, meta),
         ...validatorFields.description(form, meta),
         ...validatorFields.host_port_encryption(form, meta),
+        ...validatorFields.dead_duration(form, meta),
         ...validatorFields.connection_timeout(form, meta),
         ...validatorFields.write_timeout(form, meta),
         ...validatorFields.read_timeout(form, meta),
@@ -3121,6 +3141,7 @@ export const validators = (form = {}, meta = {}) => {
         ...validatorFields.id(form, meta),
         ...validatorFields.description(form, meta),
         ...validatorFields.host_port_encryption(form, meta),
+        ...validatorFields.dead_duration(form, meta),
         ...validatorFields.connection_timeout(form, meta),
         ...validatorFields.write_timeout(form, meta),
         ...validatorFields.read_timeout(form, meta),
@@ -3141,6 +3162,7 @@ export const validators = (form = {}, meta = {}) => {
         ...validatorFields.id(form, meta),
         ...validatorFields.description(form, meta),
         ...validatorFields.host_port_encryption(form, meta),
+        ...validatorFields.dead_duration(form, meta),
         ...validatorFields.connection_timeout(form, meta),
         ...validatorFields.write_timeout(form, meta),
         ...validatorFields.read_timeout(form, meta),
