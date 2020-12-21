@@ -27,7 +27,8 @@ export const routedNetworkList = [
   { value: 'dns-enforcement', text: i18n.t('DNS Enforcement') },
   { value: 'inlinel3', text: i18n.t('Inline Layer 3') },
   { value: 'vlan-isolation', text: i18n.t('Isolation') },
-  { value: 'vlan-registration', text: i18n.t('Registration') }
+  { value: 'vlan-registration', text: i18n.t('Registration') },
+  { value: 'unmanaged', text: i18n.t('Unmanaged Network') }
 ]
 
 export const routedNetworkListFormatter = (value) => {
@@ -149,6 +150,16 @@ export const view = (form = {}, meta = {}) => {
                 label: 'text',
                 options: routedNetworkList
               }
+            }
+          ]
+        },
+        {
+          label: i18n.t('Tenant'),
+          cols: [
+            {
+              namespace: 'tenant_id',
+              component: pfFormChosen,
+              attrs: attributesFromMeta(meta, 'tenant_id')
             }
           ]
         },
