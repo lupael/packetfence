@@ -200,6 +200,8 @@ var methodSuffixMap = map[string]string{
 	"DELETE":  "_DELETE",
 }
 
+var InvalidTokenInfoErr = "Invalid token info"
+
 type TokenAuthorizationMiddleware struct {
 	tokenBackend TokenBackend
 }
@@ -233,7 +235,7 @@ func (tam *TokenAuthorizationMiddleware) BearerRequestIsAuthorized(ctx context.C
 	tokenInfo, _ := tam.tokenBackend.TokenInfoForToken(token)
 
 	if tokenInfo == nil {
-		return false, errors.New("Invalid token info")
+		return false, errors.New(InvalidTokenInfoErr)
 	}
 
 	var tenantId int
@@ -270,7 +272,7 @@ func (tam *TokenAuthorizationMiddleware) BearerRequestIsAuthorized(ctx context.C
 // Checks whether or not that request is authorized based on the path and method
 func (tam *TokenAuthorizationMiddleware) IsAuthorized(ctx context.Context, method, path string, tenantId int, tokenInfo *TokenInfo) (bool, error) {
 	if tokenInfo == nil {
-		return false, errors.New("Invalid token info")
+		return false, errors.New(InvalidTokenInfoErr)
 	}
 
 	authAdminRoles, err := tam.isAuthorizedAdminActions(ctx, method, path, tokenInfo.AdminActions())
