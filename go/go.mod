@@ -24,6 +24,7 @@ require (
 	github.com/farsightsec/golang-framestream v0.0.0-20180124174429-c06a5734334d
 	github.com/fdurand/arp v0.0.0-20180807174648-27b38d3af1be
 	github.com/fdurand/go-cache v0.0.0-20180104143916-cf0198ac7d92
+	github.com/fdurand/scep v1.0.1-0.20201229152023-054ac94f1543
 	github.com/flynn/go-shlex v0.0.0-20150515145356-3f9db97f8568
 	github.com/gdey/jsonpath v0.0.0-20151203210429-124c978a1ffc
 	github.com/gin-gonic/gin v1.6.2
@@ -72,6 +73,7 @@ require (
 	github.com/mdlayher/raw v0.0.0-20171214195253-9df8b4265df2
 	github.com/mediocregopher/radix.v2 v0.0.0-20180603022615-94360be26253
 	github.com/mholt/caddy v0.9.5
+	github.com/micromdm/scep v1.0.1-0.20201110133952-f3adbb75202b
 	github.com/miekg/dns v1.1.3
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/naoina/go-stringutil v0.1.0 // indirect
