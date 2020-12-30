@@ -3,6 +3,7 @@ module github.com/inverse-inc/packetfence/go
 go 1.13
 
 require (
+	cloud.google.com/go v0.37.4 // indirect
 	github.com/OneOfOne/xxhash v1.2.7
 	github.com/Sereal/Sereal v0.0.0-20161214074320-36f2c9f6f409
 	github.com/Shopify/sarama v1.24.0 // indirect
@@ -24,15 +25,16 @@ require (
 	github.com/farsightsec/golang-framestream v0.0.0-20180124174429-c06a5734334d
 	github.com/fdurand/arp v0.0.0-20180807174648-27b38d3af1be
 	github.com/fdurand/go-cache v0.0.0-20180104143916-cf0198ac7d92
-	github.com/fdurand/scep v1.0.1-0.20201229152023-054ac94f1543
+	github.com/fdurand/scep v1.0.1-0.20201230183908-e1d78a799f0c
 	github.com/flynn/go-shlex v0.0.0-20150515145356-3f9db97f8568
 	github.com/gdey/jsonpath v0.0.0-20151203210429-124c978a1ffc
 	github.com/gin-gonic/gin v1.6.2
 	github.com/go-acme/lego v2.5.0+incompatible
 	github.com/go-errors/errors v0.0.0-20180813162953-d98b870cc4e0
+	github.com/go-kit/kit v0.8.0
 	github.com/go-logfmt/logfmt v0.4.0 // indirect
 	github.com/go-redis/redis v0.0.0-20190325112110-a679e614427a
-	github.com/go-sql-driver/mysql v1.4.1
+	github.com/go-sql-driver/mysql v1.5.0
 	github.com/go-test/deep v1.0.5
 	github.com/gogo/protobuf v1.3.1 // indirect
 	github.com/goji/httpauth v0.0.0-20160601135302-2da839ab0f4d
@@ -59,7 +61,7 @@ require (
 	github.com/inverse-inc/go-radius v0.0.0-20201019132414-82756e2d8d47
 	github.com/jcuga/golongpoll v1.1.0
 	github.com/jimstudt/http-authentication v0.0.0-20140401203705-3eca13d6893a
-	github.com/jinzhu/gorm v1.9.11
+	github.com/jinzhu/gorm v1.9.16
 	github.com/jonboulle/clockwork v0.1.0 // indirect
 	github.com/julienschmidt/httprouter v1.2.0
 	github.com/julsemaan/certmagic v0.6.3-0.20191015203349-067e102ae4ff
@@ -100,8 +102,8 @@ require (
 	github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2 // indirect
 	go.etcd.io/bbolt v1.3.3 // indirect
 	go.uber.org/zap v1.13.0 // indirect
-	golang.org/x/crypto v0.0.0-20190510104115-cbcb75029529
-	golang.org/x/net v0.0.0-20190620200207-3b0461eec859
+	golang.org/x/crypto v0.0.0-20191205180655-e7c4368fe9dd
+	golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e
 	golang.org/x/text v0.3.2
 	golang.org/x/time v0.0.0-20191024005414-555d28b269f0 // indirect
 	google.golang.org/grpc v1.22.1
