@@ -130,8 +130,7 @@ install: build
 	install -m0600 addons/pfarp_remote/conf/pfarp_remote.conf $(CURDIR)/debian/packetfence-remote-arp-sensor$(PREFIX)/$(NAME)/conf
 	#PacketFence Mariadb plugin
 	make src/mariadb_udf/pf_udf.so
-	install -d -m0755 $(CURDIR)/debian/packetfence/$$(pkg-config mariadb --variable=plugindir)/
-	install -m0755 src/mariadb_udf/pf_udf.so $(CURDIR)/debian/packetfence/$$(pkg-config mariadb --variable=plugindir)/
+	install -D -m0755 $(CURDIR)/debian/packetfence/$$(pkg-config mariadb --variable=plugindir)/
 	#PacketFence pfcmd suid
 	install -d -m0755 $(CURDIR)/debian/packetfence-pfcmd-suid$(PREFIX)/$(NAME)/bin
 	gcc src/pfcmd.c -o $(CURDIR)/debian/packetfence-pfcmd-suid$(PREFIX)/$(NAME)/bin/pfcmd
