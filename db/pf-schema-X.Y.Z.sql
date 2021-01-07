@@ -13,6 +13,12 @@ SET @SUBMINOR_VERSION = 9;
 SET @VERSION_INT = @MAJOR_VERSION << 16 | @MINOR_VERSION << 8 | @SUBMINOR_VERSION;
 
 --
+-- Create FUNCTION pf_logger
+--
+
+CREATE FUNCTION IF NOT EXISTS pf_logger RETURNS integer SONAME "pf_udf.so";
+
+--
 -- Table structure for table `tenant`
 --
 

@@ -50,6 +50,8 @@ DELIMITER ;
 call ValidateVersion;
 DROP PROCEDURE IF EXISTS ValidateVersion;
 
+CREATE FUNCTION IF NOT EXISTS pf_logger RETURNS integer SONAME "pf_udf.so";
+
 DELIMITER /
 CREATE OR REPLACE TRIGGER `log_event_auth_log_insert` AFTER INSERT ON `auth_log`
 FOR EACH ROW BEGIN
