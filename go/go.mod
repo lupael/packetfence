@@ -25,7 +25,7 @@ require (
 	github.com/farsightsec/golang-framestream v0.0.0-20180124174429-c06a5734334d
 	github.com/fdurand/arp v0.0.0-20180807174648-27b38d3af1be
 	github.com/fdurand/go-cache v0.0.0-20180104143916-cf0198ac7d92
-	github.com/fdurand/scep v1.0.1-0.20201230183908-e1d78a799f0c
+	ithub.com/fdurand/scep v0.0.0-20210106145219-60f4a5c461a0
 	github.com/flynn/go-shlex v0.0.0-20150515145356-3f9db97f8568
 	github.com/gdey/jsonpath v0.0.0-20151203210429-124c978a1ffc
 	github.com/gin-gonic/gin v1.6.2

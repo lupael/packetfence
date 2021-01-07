@@ -1512,6 +1512,7 @@ CREATE TABLE `pki_profiles` (
   `p12_mail_from` varchar(255) DEFAULT NULL,
   `p12_mail_header` varchar(255) DEFAULT NULL,
   `p12_mail_footer` varchar(255) DEFAULT NULL,
+  `scep_enabled` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `idx_profiles_deleted_at` (`deleted_at`),
